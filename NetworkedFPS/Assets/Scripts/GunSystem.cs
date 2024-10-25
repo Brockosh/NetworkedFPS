@@ -66,7 +66,8 @@ public class GunSystem : MonoBehaviour
         if (source == 3) source = 0;
         readyToShoot = false;
 
-        Instantiate(muzzleReference, muzzleReferencePosition.position, Quaternion.identity);
+        GameObject flash = Instantiate(muzzleReference, muzzleReferencePosition.position, Quaternion.identity);
+        flash.transform.parent = transform;
 
         bulletsLeft--;
 
