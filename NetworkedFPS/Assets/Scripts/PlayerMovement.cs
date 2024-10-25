@@ -1,9 +1,10 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     public CharacterController controller;
     public float speed = 12f;
@@ -19,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        //Fix ground check not working
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
