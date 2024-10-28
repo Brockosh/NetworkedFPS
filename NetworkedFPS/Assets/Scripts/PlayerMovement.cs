@@ -1,6 +1,7 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
 
@@ -18,9 +19,10 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 velocity;
     private bool isGrounded = true;
 
+
     void Update()
     {
-        if (isOwned)
+        if (isLocalPlayer)
         {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -47,4 +49,5 @@ public class PlayerMovement : NetworkBehaviour
         }
         
     }
+
 }
