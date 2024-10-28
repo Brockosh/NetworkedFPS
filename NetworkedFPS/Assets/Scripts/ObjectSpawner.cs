@@ -1,13 +1,13 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectSpawner : MonoBehaviour
+public class ObjectSpawner : NetworkBehaviour
 {
     public GameObject map;
     public GameObject objectToSpawnForTesting;
     public AnimationCurve animationCurve;
-
 
     public Vector3 FindSpawnPosition()
     {
@@ -22,12 +22,12 @@ public class ObjectSpawner : MonoBehaviour
 
     }
 
+    [Command]
     public void SpawnObjectAtPosition(GameObject objectToSpawn, Vector3 positionToSpawnAt)
     {
         Vector3 spawnPosition = new Vector3(positionToSpawnAt.x, positionToSpawnAt.y + 0.5f, positionToSpawnAt.z);
 
         Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
-
     }
 
 

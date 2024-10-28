@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Audio;
 
-public class GunSystem : MonoBehaviour
+public class GunSystem : NetworkBehaviour
 {
     public int damage;
     public float timeBetweenBullets, spread, range, reloadTime, timeBetweenShots;
@@ -27,8 +28,17 @@ public class GunSystem : MonoBehaviour
     public AudioClip bulletSound;
     public GameObject muzzleReference;
     public Transform muzzleReferencePosition;
+
+    [SyncVar]
+    private uint ownerId;
+
+    [SerializeField]
+    private ParentConstraint constraint;
+
+
     private void Start()
     {
+        fpsCam = FindObjectOfType<Camera>();
         bulletsLeft = magazineSize;
         readyToShoot = true;
     }
@@ -36,6 +46,28 @@ public class GunSystem : MonoBehaviour
     private void Update()
     {
         MyInput();
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        if (isOwned)
+        {
+           //Constrain();
+        }
+    }
+
+    public void AssignOwner(uint ownerId)
+    {
+        this.ownerId = ownerId;
+    }
+
+    public void Constrain()
+    {
+        Transform ap = NetworkClient.spawned[ownerId].GetComponent<Player>().gunAttachPoint;
+        constraint.constraintActive = true;
+        constraint.SetSource(0, new ConstraintSource { sourceTransform = ap, weight = 1 });
     }
 
     private void MyInput()
@@ -53,9 +85,10 @@ public class GunSystem : MonoBehaviour
 
     }
 
+    [Command]
     private void Shoot()
     {
-        Debug.Log("SHOT");
+        Debug.Log("Shooting on server");
 
         int source = 0;
 
@@ -88,8 +121,6 @@ public class GunSystem : MonoBehaviour
                 rayHit.collider.gameObject.GetComponent<IDamageable>().TakeDamage(damage);
                 Debug.Log("HIT OTHER PLAYER");
             }
-
-
         }
         bulletsLeft--;
         bulletsShot--;

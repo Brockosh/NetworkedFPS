@@ -1,11 +1,12 @@
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour, IDamageable
+public class PlayerHealth : NetworkBehaviour, IDamageable
 {
-
+    [SyncVar]
     public int health = 100;
     private int Health {  get { return health; }  set { health = value; } }
 
