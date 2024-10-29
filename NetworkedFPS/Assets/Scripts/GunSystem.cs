@@ -54,7 +54,7 @@ public class GunSystem : NetworkBehaviour
 
         if (isOwned)
         {
-           //Constrain();
+           Constrain();
         }
     }
 
@@ -65,9 +65,9 @@ public class GunSystem : NetworkBehaviour
 
     public void Constrain()
     {
-        Transform ap = NetworkClient.spawned[ownerId].GetComponent<Player>().gunAttachPoint;
-        constraint.constraintActive = true;
-        constraint.SetSource(0, new ConstraintSource { sourceTransform = ap, weight = 1 });
+        transform.parent = FindObjectOfType<Camera>().transform;
+        transform.localPosition = NetworkClient.spawned[ownerId].GetComponent<Player>().gunAttachPoint.transform.localPosition;
+        transform.localRotation = NetworkClient.spawned[ownerId].GetComponent<Player>().gunAttachPoint.transform.localRotation;
     }
 
     private void MyInput()

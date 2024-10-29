@@ -7,7 +7,7 @@ public class Player : NetworkBehaviour
 {
     public Transform cameraAttachPoint;
     public Transform gunAttachPoint;
-    public GunSystem M4;
+    public GunSystem M4; 
 
     void Start()
     {
@@ -27,12 +27,12 @@ public class Player : NetworkBehaviour
 
         if (NetworkServer.active)
         {
+            //Create gun in server scene
             GunSystem gun = Instantiate(M4);
-            gun.transform.parent = camera.transform;
-            gun.transform.localPosition = gunAttachPoint.transform.localPosition;
-            gun.transform.localRotation = gunAttachPoint.transform.localRotation;
+            //Spawn gun on server, meaning is shows up for the client
             gun.AssignOwner(netIdentity.netId);
-            NetworkServer.Spawn(gun.gameObject, connectionToClient);
+            NetworkServer.Spawn(gun.gameObject, connectionToClient);    
         }
+
     }
 }

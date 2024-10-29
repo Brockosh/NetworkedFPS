@@ -122,7 +122,6 @@ GameObject:
   - component: {fileID: 6871785680171837281}
   - component: {fileID: -4410893024117863265}
   - component: {fileID: -2366581931674470887}
-  - component: {fileID: -9048140322186849652}
   m_Layer: 7
   m_Name: M4
   m_TagString: Untagged
@@ -165,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a0ac6e4033fb104ba63f693d931f02d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
+  syncDirection: 1
   syncMode: 0
   syncInterval: 0
   damage: 20
@@ -191,7 +190,7 @@ MonoBehaviour:
   bulletSound: {fileID: 8300000, guid: 0fdf0ae9ba569f74cae2320942b2bc2c, type: 3}
   muzzleReference: {fileID: 199458, guid: 51b76f616384d4946bed4ecc9a6c2c3e, type: 3}
   muzzleReferencePosition: {fileID: 9070797198861538365}
-  constraint: {fileID: -9048140322186849652}
+  constraint: {fileID: 0}
 --- !u!82 &5902048749821800253
 AudioSource:
   m_ObjectHideFlags: 0
@@ -605,7 +604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
   target: {fileID: 837273913567307129}
@@ -628,33 +627,6 @@ MonoBehaviour:
   compressRotation: 0
   positionPrecision: 0.01
   scalePrecision: 0.01
---- !u!1773428102 &-9048140322186849652
-ParentConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 60034007832805315}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0.3, y: -0.2, z: 0.5}
-  m_RotationAtRest: {x: 0, y: 83.903, z: 0}
-  m_TranslationOffsets:
-  - {x: 0, y: 0, z: 0}
-  m_RotationOffsets:
-  - {x: 0, y: 0, z: 0}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_AffectRotationX: 1
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
-  m_Active: 0
-  m_IsLocked: 0
-  m_Sources:
-  - sourceTransform: {fileID: 0}
-    weight: 1
 --- !u!1 &79887016174505073
 GameObject:
   m_ObjectHideFlags: 0
