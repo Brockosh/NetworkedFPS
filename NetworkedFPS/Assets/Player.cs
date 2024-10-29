@@ -11,24 +11,26 @@ public class Player : NetworkBehaviour
 
     void Start()
     {
+        Camera camera = FindObjectOfType<Camera>();
+
         if (isLocalPlayer)
         {
-            Transform cameraTransform = FindObjectOfType<Camera>().transform;
+            Transform cameraTransform = camera.transform;
             cameraTransform.parent = cameraAttachPoint.transform;  
             cameraTransform.position = cameraAttachPoint.transform.position;  
             cameraTransform.rotation = cameraAttachPoint.transform.rotation;
 
-            cameraTransform.gameObject.GetComponent<MouseLook>().playerBody = transform;
-            cameraTransform.gameObject.GetComponent<MouseLook>().attachedToPlayerTransform = true;
-            cameraTransform.gameObject.GetComponent<MouseLook>().LockCursor();
+            camera.GetComponent<MouseLook>().playerBody = transform;
+            camera.GetComponent<MouseLook>().attachedToPlayerTransform = true;
+            camera.GetComponent<MouseLook>().LockCursor();
         }
 
         if (NetworkServer.active)
         {
             GunSystem gun = Instantiate(M4);
-            gun.transform.parent = gunAttachPoint.transform;
-            gun.transform.localPosition = Vector3.zero;  
-            gun.transform.localRotation = Quaternion.identity;
+            gun.transform.parent = camera.transform;
+            gun.transform.localPosition = gunAttachPoint.transform.localPosition;
+            gun.transform.localRotation = gunAttachPoint.transform.localRotation;
             gun.AssignOwner(netIdentity.netId);
             NetworkServer.Spawn(gun.gameObject, connectionToClient);
         }
