@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Audio;
+using static Unity.VisualScripting.Member;
 
 public class GunSystem : NetworkBehaviour
 {
@@ -12,15 +13,15 @@ public class GunSystem : NetworkBehaviour
     public float timeBetweenBullets, spread, range, reloadTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
-    int bulletsLeft, bulletsShot;
+    int bulletsRemaining, shotsRemainingInBurst;
 
     bool shooting, readyToShoot, reloading;
 
-    public AudioSource[] audioSourcePool;
+    public AudioSource audioSource;
     public Camera fpsCam;
 
     public RaycastHit rayHit;
-    public LayerMask whatIsEnemy;
+    public LayerMask enemyLayer;
 
     public float UpperAudio;
     public float lowerAudio;
@@ -39,7 +40,7 @@ public class GunSystem : NetworkBehaviour
     private void Start()
     {
         fpsCam = FindObjectOfType<Camera>();
-        bulletsLeft = magazineSize;
+        bulletsRemaining = magazineSize;
         readyToShoot = true;
     }
 
@@ -72,47 +73,74 @@ public class GunSystem : NetworkBehaviour
 
     private void MyInput()
     {
+        
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading) Reload();
+        if (Input.GetKeyDown(KeyCode.R) && bulletsRemaining < magazineSize && !reloading) Reload();
 
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (readyToShoot && shooting && !reloading && bulletsRemaining > 0)
         {
-            bulletsShot = bulletsPerTap;
+            shotsRemainingInBurst = bulletsPerTap;
             Shoot();
         }
 
     }
 
-    [Command]
     private void Shoot()
     {
-        Debug.Log("Shooting on server");
+        if (!isLocalPlayer) return;
 
-        int source = 0;
-
-        audioSourcePool[source].pitch = UnityEngine.Random.Range(lowerAudio, UpperAudio);
-        audioSourcePool[source].PlayOneShot(audioSourcePool[source].clip);
-        source++;
-
-        if (source == 3) source = 0;
+        PlayGunSound();
         readyToShoot = false;
 
-        GameObject flash = Instantiate(muzzleReference, muzzleReferencePosition.position, Quaternion.identity);
-        flash.transform.parent = transform;
+        PlayGunEffect();
 
-        bulletsLeft--;
+        bulletsRemaining--;
 
-        //Spread
+        GetBulletSpreadValues(out Vector2 spreadValues);
+        
+        //Calculate Direction with Spread
+        Vector3 direction = fpsCam.transform.forward + new Vector3(spreadValues.x, spreadValues.y, 0);
+
+        CmdRaycastForPlayer(direction);
+
+        bulletsRemaining--;
+        //Purely for burst or single tap weapons
+        shotsRemainingInBurst--;
+
+        Invoke("ResetShot", timeBetweenBullets);
+
+        if (shotsRemainingInBurst > 0 &&  bulletsRemaining > 0) 
+            Invoke("Shoot", timeBetweenShots);
+    }
+
+    private void GetBulletSpreadValues(out Vector2 spreadValues)
+    {
         float x = UnityEngine.Random.Range(-spread, spread);
         float y = UnityEngine.Random.Range(-spread, spread);
 
-        //Calculate Direction with Spread
-        Vector3 direction = fpsCam.transform.forward + new Vector3(x, y, 0);
+        spreadValues = new Vector2(x, y);
+    }
 
+    [ClientRpc]
+    private void PlayGunEffect()
+    {
+        GameObject flash = Instantiate(muzzleReference, muzzleReferencePosition.position, Quaternion.identity);
+        flash.transform.parent = transform;
+    }
 
-        if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, whatIsEnemy))
+    [ClientRpc]
+    private void PlayGunSound()
+    {
+        audioSource.pitch = UnityEngine.Random.Range(lowerAudio, UpperAudio);
+        audioSource.PlayOneShot(audioSource.clip);
+    }
+
+    [Command]
+    private void CmdRaycastForPlayer(Vector3 direction)
+    {
+        if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, enemyLayer))
         {
             Debug.Log(rayHit.collider.name);
 
@@ -122,13 +150,6 @@ public class GunSystem : NetworkBehaviour
                 Debug.Log("HIT OTHER PLAYER");
             }
         }
-        bulletsLeft--;
-        bulletsShot--;
-
-        Invoke("ResetShot", timeBetweenBullets);
-
-        if (bulletsShot > 0 &&  bulletsLeft > 0) 
-            Invoke("Shoot", timeBetweenShots);
     }
 
     private void ResetShot()
@@ -144,7 +165,7 @@ public class GunSystem : NetworkBehaviour
 
     private void ReloadFinished()
     {
-        bulletsLeft = magazineSize;
+        bulletsRemaining = magazineSize;
         reloading = false;
     }
 
