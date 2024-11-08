@@ -10,7 +10,6 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
     public int health = 100;
     private int Health {  get { return health; }  set { health = value; } }
 
-
     public void TakeDamage(int damage)
     {
         health -= damage;

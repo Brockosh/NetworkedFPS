@@ -91,6 +91,7 @@ public class GunSystem : NetworkBehaviour
         {
             shotsRemainingInBurst = bulletsPerTap;
             Shoot();
+
         }
 
     }
@@ -108,11 +109,11 @@ public class GunSystem : NetworkBehaviour
         bulletsRemaining--;
 
         GetBulletSpreadValues(out Vector2 spreadValues);
-        
+
         //Calculate Direction with Spread
         Vector3 direction = fpsCam.transform.forward + new Vector3(spreadValues.x, spreadValues.y, 0);
 
-        CmdRaycastForPlayer(direction);
+        RaycastForPlayer(direction);
 
         bulletsRemaining--;
         //Purely for burst or single tap weapons
@@ -148,7 +149,7 @@ public class GunSystem : NetworkBehaviour
         AudioSource.PlayClipAtPoint(audioSource.clip, soundPos);
     }
 
-    private void CmdRaycastForPlayer(Vector3 direction)
+    private void RaycastForPlayer(Vector3 direction)
     {
         if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, enemyLayer))
         {
@@ -158,9 +159,17 @@ public class GunSystem : NetworkBehaviour
             {
                 rayHit.collider.gameObject.GetComponent<IDamageable>().TakeDamage(damage);
                 Debug.Log("HIT OTHER PLAYER");
+                RpcHitNotification();
             }
         }
     }
+
+    [ClientRpc]
+    public void RpcHitNotification()
+    {
+        Debug.Log("HIT OTHER PLAYER ON SERVER");
+    }
+
 
     private void ResetShot()
     {
