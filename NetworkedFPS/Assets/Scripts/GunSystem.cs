@@ -46,7 +46,13 @@ public class GunSystem : NetworkBehaviour
 
     private void Update()
     {
-        MyInput();
+        if (NetworkClient.active)
+        {
+            if (ownerId == NetworkClient.localPlayer.netId)
+            {
+                MonitorForShooting();
+            }
+        }
     }
 
     public override void OnStartClient()
@@ -71,14 +77,16 @@ public class GunSystem : NetworkBehaviour
         transform.localRotation = NetworkClient.spawned[ownerId].GetComponent<Player>().gunAttachPoint.transform.localRotation;
     }
 
-    private void MyInput()
+    private void MonitorForShooting()
     {
-        
+        //Check if burst or auto and set check accordingly
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
+        //Check if can reload
         if (Input.GetKeyDown(KeyCode.R) && bulletsRemaining < magazineSize && !reloading) Reload();
 
+        //Check if all requirements met to shoot
         if (readyToShoot && shooting && !reloading && bulletsRemaining > 0)
         {
             shotsRemainingInBurst = bulletsPerTap;
@@ -87,14 +95,15 @@ public class GunSystem : NetworkBehaviour
 
     }
 
+    //I think this has to be a command as we are running client RPCs inside? Maybe better to separate everything out into its own method
+    [Command]
     private void Shoot()
     {
-        if (!isLocalPlayer) return;
 
-        PlayGunSound();
+        RpcPlayGunSound(muzzleReferencePosition.position);
         readyToShoot = false;
 
-        PlayGunEffect();
+        RpcPlayGunEffect(muzzleReferencePosition.position);
 
         bulletsRemaining--;
 
@@ -124,20 +133,21 @@ public class GunSystem : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void PlayGunEffect()
+    private void RpcPlayGunEffect(Vector3 effectPos)
     {
-        GameObject flash = Instantiate(muzzleReference, muzzleReferencePosition.position, Quaternion.identity);
+        GameObject flash = Instantiate(muzzleReference, effectPos, Quaternion.identity);
         flash.transform.parent = transform;
     }
 
     [ClientRpc]
-    private void PlayGunSound()
+    private void RpcPlayGunSound(Vector3 soundPos)
     {
-        audioSource.pitch = UnityEngine.Random.Range(lowerAudio, UpperAudio);
-        audioSource.PlayOneShot(audioSource.clip);
+        //audioSource.pitch = UnityEngine.Random.Range(lowerAudio, UpperAudio);
+        //audioSource.PlayOneShot(audioSource.clip);
+
+        AudioSource.PlayClipAtPoint(audioSource.clip, soundPos);
     }
 
-    [Command]
     private void CmdRaycastForPlayer(Vector3 direction)
     {
         if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, enemyLayer))

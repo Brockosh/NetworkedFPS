@@ -165,14 +165,14 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   damage: 20
-  timeBetweenBullets: 0.09
+  timeBetweenBullets: 0.01
   spread: 0.02
   range: 100
   reloadTime: 1
   timeBetweenShots: 0
   magazineSize: 100
   bulletsPerTap: 1
-  allowButtonHold: 1
+  allowButtonHold: 0
   audioSource: {fileID: 6871785680171837281}
   fpsCam: {fileID: 0}
   enemyLayer:

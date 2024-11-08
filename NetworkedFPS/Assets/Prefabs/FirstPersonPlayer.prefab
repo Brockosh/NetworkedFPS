@@ -305,7 +305,7 @@ MonoBehaviour:
   syncInterval: 0
   cameraAttachPoint: {fileID: 2951183735412134590}
   gunAttachPoint: {fileID: 1880622592951412219}
-  M4: {fileID: 6751181908618446921, guid: 514702dacaa60e140991a3977a24a730, type: 3}
+  M4: {fileID: 6751181908618446921, guid: 3a3b3e9d4ded42f488c91979b7bf15f9, type: 3}
 --- !u!114 &9192887601883761434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,10 +346,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8463266456723579870}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.66261995, z: 0, w: 0.7489558}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.3, y: -0.2, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2951183735412134590}
-  m_LocalEulerAnglesHint: {x: 0, y: 83, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
