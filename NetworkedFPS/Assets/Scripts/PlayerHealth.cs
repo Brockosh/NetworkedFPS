@@ -15,7 +15,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
         health -= damage;
         if (health <= 0)
         {
-            PlayerManager.instance.StartRespawn(gameObject);
+            PlayerManager.instance.RespawnPlayer(connectionToClient);
             Debug.Log("Player Died");
         }
     }

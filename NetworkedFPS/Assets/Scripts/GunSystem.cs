@@ -111,9 +111,9 @@ public class GunSystem : NetworkBehaviour
         GetBulletSpreadValues(out Vector2 spreadValues);
 
         //Calculate Direction with Spread
-        Vector3 direction = fpsCam.transform.forward + new Vector3(spreadValues.x, spreadValues.y, 0);
+        //Vector3 direction = fpsCam.transform.forward + new Vector3(spreadValues.x, spreadValues.y, 0);
 
-        RaycastForPlayer(direction);
+        RaycastForPlayer();
 
         bulletsRemaining--;
         //Purely for burst or single tap weapons
@@ -149,9 +149,10 @@ public class GunSystem : NetworkBehaviour
         AudioSource.PlayClipAtPoint(audioSource.clip, soundPos);
     }
 
-    private void RaycastForPlayer(Vector3 direction)
+    private void RaycastForPlayer()
     {
-        if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, enemyLayer))
+        Debug.DrawRay(muzzleReferencePosition.position, muzzleReferencePosition.transform.forward, Color.red, 5);
+        if (Physics.Raycast(muzzleReferencePosition.position, muzzleReferencePosition.transform.forward, out rayHit, range, enemyLayer))
         {
             Debug.Log(rayHit.collider.name);
 

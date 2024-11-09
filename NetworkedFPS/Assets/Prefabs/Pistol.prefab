@@ -54,7 +54,7 @@ MonoBehaviour:
   damage: 20
   timeBetweenBullets: 0.01
   spread: 0.02
-  range: 100
+  range: 15000
   reloadTime: 1
   timeBetweenShots: 0
   magazineSize: 100
