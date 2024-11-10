@@ -13,10 +13,18 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         health -= damage;
+        
         if (health <= 0)
         {
-            PlayerManager.instance.RespawnPlayer(connectionToClient);
+            PlayerManager.instance.PrepareRespawn(connectionToClient, GetComponent<NetworkIdentity>().netId);
             Debug.Log("Player Died");
+            health = 100;
         }
+    }
+
+    public void ResetHealth()
+    {
+        health = 100;
+        Debug.LogWarning("Health Reset");
     }
 }
