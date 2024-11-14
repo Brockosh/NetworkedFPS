@@ -9,10 +9,4 @@ public class PlayerScores : NetworkBehaviour
     public TextMeshProUGUI myTMP;
 
 
-    private void Start()
-    {
-        myTMP.text = 
-    }
-
-
 }

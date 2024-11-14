@@ -70,3 +70,10 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Ignore ParrelSync clone projects
+*_clone_*/
+
+
+# Ignore Bootcamp Map from Asset Store
+/Assets/Bootcamp Map/
