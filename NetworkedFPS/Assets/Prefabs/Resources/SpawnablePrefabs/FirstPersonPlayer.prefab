@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 7742670331419873318}
   - component: {fileID: 9068054665045322497}
   - component: {fileID: 9192887601883761434}
+  - component: {fileID: 2440853772893651994}
   m_Layer: 7
   m_Name: FirstPersonPlayer
   m_TagString: Untagged
@@ -306,6 +307,7 @@ MonoBehaviour:
   cameraAttachPoint: {fileID: 2951183735412134590}
   gunAttachPoint: {fileID: 1880622592951412219}
   M4: {fileID: 6751181908618446921, guid: 3a3b3e9d4ded42f488c91979b7bf15f9, type: 3}
+  playerName: 
 --- !u!114 &9192887601883761434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +324,22 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   health: 100
+--- !u!114 &2440853772893651994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8452763525663321177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c1affa9025257c49bdb37b474723ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  isLeader: 0
 --- !u!1 &8463266456723579870
 GameObject:
   m_ObjectHideFlags: 0
