@@ -48,7 +48,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  playerPrefab: {fileID: 5557295911062049512, guid: f1eea16feee60814683c892c9acea9a8, type: 3}
+  playerPrefab: {fileID: 8452763525663321177, guid: fbd8176f1a7a89f4ea73b641325d743e, type: 3}
 --- !u!114 &8153027520621845828
 MonoBehaviour:
   m_ObjectHideFlags: 0
