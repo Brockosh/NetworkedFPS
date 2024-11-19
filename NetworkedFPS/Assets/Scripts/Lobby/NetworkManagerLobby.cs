@@ -17,6 +17,9 @@ public class NetworkManagerLobby : NetworkManager
     [Header("Room")]
     [SerializeField] private NetworkRoomPlayerLobby roomPlayerPrefab = null;
 
+    [Header("User")]
+    [SerializeField] private User userPrefab = null;
+
     [Header("Game")]
     [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
     [SerializeField] private GameObject playerSpawnSystem = null;
@@ -26,7 +29,9 @@ public class NetworkManagerLobby : NetworkManager
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
     public static event Action<NetworkConnection> OnServerReadied;
+    public static event Action<string> OnSceneChange;
 
+    public List<User> Users { get; } = new List<User>();
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
 
@@ -98,9 +103,9 @@ public class NetworkManagerLobby : NetworkManager
     {
         if (conn.identity != null)
         {
-            var player = conn.identity.GetComponent<NetworkRoomPlayerLobby>();
+            var player = conn.identity.GetComponent<User>();
 
-            RoomPlayers.Remove(player);
+            Users.Remove(player);
 
             NotifyPlayersOfReadyState();
         }
@@ -111,9 +116,10 @@ public class NetworkManagerLobby : NetworkManager
 
     public void NotifyPlayersOfReadyState()
     {
-        foreach (var player in RoomPlayers)
+        foreach (var user in Users)
         {
-            player.HandleReadyToStart(IsReadyToStart());
+            NetworkRoomPlayerLobby userRoomPlayer = user.GetComponent<NetworkRoomPlayerLobby>();
+            userRoomPlayer.HandleReadyToStart(IsReadyToStart());
         }
     }
 
@@ -134,27 +140,36 @@ public class NetworkManagerLobby : NetworkManager
         // Makes sure the client is in the right scene
         if (SceneManager.GetActiveScene().name == "menuScene")
         {
+            bool IsHost = Users.Count == 0;
+
+            User userInstance = Instantiate(userPrefab);
+
+            userPrefab.IsHost= IsHost;
+
+            NetworkServer.AddPlayerForConnection(conn, userInstance.gameObject);
+
+
 
             // Pretty sure this will need to be replaced with User instead
 
-            bool isLeader = RoomPlayers.Count == 0;
+            //bool isLeader = RoomPlayers.Count == 0;
 
-            NetworkRoomPlayerLobby roomPlayerInstance = Instantiate(roomPlayerPrefab);
+            //NetworkRoomPlayerLobby roomPlayerInstance = Instantiate(roomPlayerPrefab);
 
-            roomPlayerInstance.IsLeader = isLeader;
+            //roomPlayerInstance.IsLeader = isLeader;
 
-            NetworkServer.AddPlayerForConnection(conn, roomPlayerInstance.gameObject);
+            //NetworkServer.AddPlayerForConnection(conn, roomPlayerInstance.gameObject);
         }
     }
 
     public override void OnStopServer()
     {
-        RoomPlayers.Clear();
+        Users.Clear();
     }
 
     public void StartGame()
     {
-        if (SceneManager.GetActiveScene().path == "menuScene")
+        if (SceneManager.GetActiveScene().name == "menuScene")
         {
             if (!IsReadyToStart()) { return; }
 
@@ -166,15 +181,19 @@ public class NetworkManagerLobby : NetworkManager
     {
         if (SceneManager.GetActiveScene().name == "menuScene" && newSceneName.StartsWith("Scene_Map"))
         {
-            for (int i = RoomPlayers.Count - 1; i >= 0; i--)
+            for (int i = Users.Count - 1; i >= 0; i--)
             {
-                var conn = RoomPlayers[i].connectionToClient;
-                var gamePlayerInstance = Instantiate(gamePlayerPrefab);
-                gamePlayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
 
-                NetworkServer.Destroy(conn.identity.gameObject);
 
-                NetworkServer.ReplacePlayerForConnection(conn, gamePlayerInstance.gameObject);
+
+
+                //var conn = RoomPlayers[i].connectionToClient;
+                //var gamePlayerInstance = Instantiate(gamePlayerPrefab);
+                //gamePlayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
+
+                //NetworkServer.Destroy(conn.identity.gameObject);
+
+                //NetworkServer.ReplacePlayerForConnection(conn, gamePlayerInstance.gameObject);
             }
         }
 
@@ -185,9 +204,16 @@ public class NetworkManagerLobby : NetworkManager
     {
         if (sceneName.StartsWith("Scene_Map"))
         {
-            GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);
-            NetworkServer.Spawn(playerSpawnSystemInstance);
+           // GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);
+            //NetworkServer.Spawn(playerSpawnSystemInstance);
         }
+    }
+
+    public override void OnClientSceneChanged()
+    {
+        base.OnClientSceneChanged();
+        OnSceneChange?.Invoke("Scene_Map_01");
+        
     }
 
     public override void OnServerReady(NetworkConnectionToClient conn)
