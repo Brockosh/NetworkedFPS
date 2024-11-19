@@ -37,6 +37,8 @@ public class PlayerSpawnSystem : NetworkBehaviour
             return;
         }
 
+        //Players spawn here, and are correctly position etc, but the problem I'm having is that these players are not in any way
+        //associated with the roomPlayers from the menu or the logic that is in the ServerChangeScene method in the NetworkManagerLobby
         GameObject playerInstance = Instantiate(playerPrefab, spawnPoints[nextIndex].position, spawnPoints[nextIndex].rotation);
         NetworkServer.Spawn(playerInstance, conn);
 
@@ -44,6 +46,16 @@ public class PlayerSpawnSystem : NetworkBehaviour
 
     }
 
+    public void PositionPlayer(NetworkConnection conn, GameObject player)
+    {
+
+        player.transform.position = spawnPoints[nextIndex].position;
+        player.transform.rotation = spawnPoints[nextIndex].transform.rotation;
 
 
+        NetworkServer.Spawn(player, conn);
+
+        nextIndex++;
+
+    }
 }

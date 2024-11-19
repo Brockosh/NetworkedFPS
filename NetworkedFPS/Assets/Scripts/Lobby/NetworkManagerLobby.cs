@@ -166,7 +166,6 @@ public class NetworkManagerLobby : NetworkManager
             }
         }
 
-
         base.ServerChangeScene(newSceneName);
     }
 

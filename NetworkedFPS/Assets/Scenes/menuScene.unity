@@ -1717,12 +1717,10 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 3888100537179759291, guid: 934e857e397136a4da57eff15f25dd0a, type: 3}
+  playerPrefab: {fileID: 8452763525663321177, guid: fbd8176f1a7a89f4ea73b641325d743e, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs:
-  - {fileID: 8452763525663321177, guid: fbd8176f1a7a89f4ea73b641325d743e, type: 3}
-  - {fileID: 6197670162709236841, guid: ac1a19f8cd8f94745b58c28e49c52fe2, type: 3}
+  spawnPrefabs: []
   snapshotSettings:
     bufferTimeMultiplier: 2
     bufferLimit: 32
@@ -1737,9 +1735,9 @@ MonoBehaviour:
   connectionQualityInterval: 3
   timeInterpolationGui: 0
   minPlayers: 2
-  menuScene: 
+  menuScene: Assets/Scenes/menuScene.unity
   roomPlayerPrefab: {fileID: 5682020333712193494, guid: ac1a19f8cd8f94745b58c28e49c52fe2, type: 3}
-  gamePlayerPrefab: {fileID: 2440853772893651994, guid: fbd8176f1a7a89f4ea73b641325d743e, type: 3}
+  gamePlayerPrefab: {fileID: 5684854873418286334, guid: fbd8176f1a7a89f4ea73b641325d743e, type: 3}
   playerSpawnSystem: {fileID: 636808491036046432, guid: d0c5970af15406b408daead26813719d, type: 3}
 --- !u!4 &1131774527
 Transform:
@@ -2746,7 +2744,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u200B"
+  m_text: localhost
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

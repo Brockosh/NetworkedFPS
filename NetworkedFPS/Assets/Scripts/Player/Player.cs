@@ -14,17 +14,21 @@ public class Player : NetworkBehaviour
     void Start()
     {
         playerName = "Test";
-        Camera camera = FindObjectOfType<Camera>();
+       Camera camera = GetComponent<Camera>();
+    }
 
+    public override void OnStartAuthority()
+    {
+        Debug.Log($"Authority gained on object {gameObject.name}. IsLocalPlayer: {isLocalPlayer}");
+
+        playerName = "Test";
+        Camera camera = GetComponent<Camera>();
+
+
+        //This is always false
         if (isLocalPlayer)
         {
-            Transform cameraTransform = camera.transform;
-            cameraTransform.parent = cameraAttachPoint.transform;  
-            cameraTransform.position = cameraAttachPoint.transform.position;  
-            cameraTransform.rotation = cameraAttachPoint.transform.rotation;
-
             camera.GetComponent<MouseLook>().playerBody = transform;
-            camera.GetComponent<MouseLook>().attachedToPlayerTransform = true;
             camera.GetComponent<MouseLook>().LockCursor();
         }
 
@@ -34,8 +38,8 @@ public class Player : NetworkBehaviour
             GunSystem gun = Instantiate(M4);
             //Spawn gun on server, meaning is shows up for the client
             gun.AssignOwner(netIdentity.netId);
-            NetworkServer.Spawn(gun.gameObject, connectionToClient);    
+            NetworkServer.Spawn(gun.gameObject, connectionToClient);
         }
-
     }
+
 }

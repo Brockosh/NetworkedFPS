@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class NetworkGamePlayerLobby : NetworkBehaviour
 {
-
-
     [SyncVar]
     private string displayName = "Loading...";
 
@@ -28,7 +26,7 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
 
     public override void OnStartClient()
     {
-
+        //Needs this as the player is created before it is carried to the other scene
         DontDestroyOnLoad(gameObject);
         Room.GamePlayers.Add(this);
     }

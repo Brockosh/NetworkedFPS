@@ -7,11 +7,10 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 100f;
     public Transform playerBody;
     private float xRotation = 0f;
-    public bool attachedToPlayerTransform = false;
+
 
     void Update()
     {
-        if (!attachedToPlayerTransform) return;
 
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
