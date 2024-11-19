@@ -47,6 +47,8 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
         lobbyUI.SetActive(true);
     }
 
+
+    // When a client starts, this adds itself to the Network Manager's list of room players
     public override void OnStartClient()
     {
         Room.RoomPlayers.Add(this);
@@ -65,12 +67,19 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
 
     public void HandleDisplayNameChanged(string oldValue, string newValue) => UpdateDisplay();
 
+
+
+    // Updates the UI of all connected clients
     private void UpdateDisplay()
     {
+        // If we (the client) have authority over this game object, skip this block
         if (!isOwned)
         {
             foreach (var player in Room.RoomPlayers)
             {
+
+                // If we don't have authority over this game object, we find the player that is the local player
+                // and tell them to update their ui 
                 if (player.isLocalPlayer)
                 {
                     player.UpdateDisplay();
@@ -81,12 +90,15 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
             return;
         }
 
+        // Resets the values for all the player names that we have in our UI before updating with new values
         for (int i = 0; i < playerNameTexts.Length; i++)
         {
             playerNameTexts[i].text = "Waiting For Player...";
             playerReadyTexts[i].text = string.Empty;
         }
 
+
+        // Iterates over the list of players in the Room.roomPlayers to update UI
         for (int i = 0; i < Room.RoomPlayers.Count; i++)
         { 
             playerNameTexts[i].text = Room.RoomPlayers[i].DisplayName;

@@ -11,6 +11,9 @@ public class NetworkManagerLobby : NetworkManager
     [SerializeField] private int minPlayers = 2;
     [Scene][SerializeField] private string menuScene = string.Empty;
 
+
+    // Each client and the server has its own roomPlayerPrefab, this will automatically become active when the start host
+    // is called
     [Header("Room")]
     [SerializeField] private NetworkRoomPlayerLobby roomPlayerPrefab = null;
 
@@ -18,6 +21,8 @@ public class NetworkManagerLobby : NetworkManager
     [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
     [SerializeField] private GameObject playerSpawnSystem = null;
 
+
+    // Called when a client connects 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
     public static event Action<NetworkConnection> OnServerReadied;
@@ -25,6 +30,9 @@ public class NetworkManagerLobby : NetworkManager
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
 
+
+    // This would be run when Start Host was ran
+    // Prepares all prefabs that might need to be spawned
     public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
 
     public override void OnStartClient()
@@ -33,6 +41,7 @@ public class NetworkManagerLobby : NetworkManager
 
         foreach (var prefab in spawnablePrefabs)
         {
+            // I think allows us to set from the editor what prefabs the client will be able to spawn
             NetworkClient.RegisterPrefab(prefab);
         }
     }
@@ -68,7 +77,7 @@ public class NetworkManagerLobby : NetworkManager
     }
 
 
-
+    // Called when a new client connects
     public override void OnServerConnect(NetworkConnectionToClient conn)
     {
         if (numPlayers >= maxConnections)
@@ -122,8 +131,11 @@ public class NetworkManagerLobby : NetworkManager
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
-        if (SceneManager.GetActiveScene().name != menuScene)
+        // Makes sure the client is in the right scene
+        if (SceneManager.GetActiveScene().name == "menuScene")
         {
+
+            // Pretty sure this will need to be replaced with User instead
 
             bool isLeader = RoomPlayers.Count == 0;
 
@@ -142,7 +154,7 @@ public class NetworkManagerLobby : NetworkManager
 
     public void StartGame()
     {
-        if(SceneManager.GetActiveScene().path != "menuScene")
+        if (SceneManager.GetActiveScene().path == "menuScene")
         {
             if (!IsReadyToStart()) { return; }
 

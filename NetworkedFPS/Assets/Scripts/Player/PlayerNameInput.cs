@@ -32,6 +32,8 @@ public class PlayerNameInput : MonoBehaviour
         //continueButton.interactable = !string.IsNullOrEmpty(name);
     }
 
+    // Button to save name if you enter a new name
+    // Clicking this enable the join or host page and disables the name enter page
     public void SavePlayerName()
     {
         DisplayName = nameInputField.text;
