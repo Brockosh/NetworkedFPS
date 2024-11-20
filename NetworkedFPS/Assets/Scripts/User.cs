@@ -40,14 +40,12 @@ public class User : NetworkBehaviour
 
     private void Start()
     {
-        NetworkManagerLobby.OnSceneChange += UpdateControlledObject;
-        DontDestroyOnLoad(this);
-       
+        DontDestroyOnLoad(gameObject);
     }
 
 
-    [Command]
-    private void UpdateControlledObject(string newSceneName)
+    [Command(requiresAuthority = false)]
+    public void UpdateControlledObject(string newSceneName)
     {
         if (newSceneName.StartsWith("Scene_Map"))
         {
@@ -55,6 +53,8 @@ public class User : NetworkBehaviour
             NetworkServer.Spawn(FirstPersonPlayerPrefab, connectionToServer);
         }
     }
+
+
 
 
 

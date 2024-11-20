@@ -1720,7 +1720,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 8452763525663321177, guid: fbd8176f1a7a89f4ea73b641325d743e, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 4111195143964837895, guid: 5fd942189a8b3d74897885dc5f1decdb, type: 3}
   snapshotSettings:
     bufferTimeMultiplier: 2
     bufferLimit: 32
@@ -1740,6 +1741,7 @@ MonoBehaviour:
   userPrefab: {fileID: 2357333788545875425, guid: 8c61dd5e3189a1443b8f040c513f7800, type: 3}
   gamePlayerPrefab: {fileID: 5684854873418286334, guid: fbd8176f1a7a89f4ea73b641325d743e, type: 3}
   playerSpawnSystem: {fileID: 636808491036046432, guid: d0c5970af15406b408daead26813719d, type: 3}
+  userManager: {fileID: 2088400949319998449, guid: 5fd942189a8b3d74897885dc5f1decdb, type: 3}
 --- !u!4 &1131774527
 Transform:
   m_ObjectHideFlags: 0

@@ -24,12 +24,16 @@ public class NetworkManagerLobby : NetworkManager
     [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
     [SerializeField] private GameObject playerSpawnSystem = null;
 
+    [Header("UserManager")]
+    [SerializeField] private UserManager userManager = null;
+
 
     // Called when a client connects 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
     public static event Action<NetworkConnection> OnServerReadied;
     public static event Action<string> OnSceneChange;
+    public static event Action OnUserManagerReady;
 
     public List<User> Users { get; } = new List<User>();
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
@@ -38,7 +42,13 @@ public class NetworkManagerLobby : NetworkManager
 
     // This would be run when Start Host was ran
     // Prepares all prefabs that might need to be spawned
-    public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
+    public override void OnStartServer()
+    {
+        spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
+        UserManager userManagerRef = Instantiate(userManager);
+        NetworkServer.Spawn(userManagerRef.gameObject);
+        userManager = userManagerRef;
+    }
 
     public override void OnStartClient()
     {
@@ -148,6 +158,11 @@ public class NetworkManagerLobby : NetworkManager
 
             NetworkServer.AddPlayerForConnection(conn, userInstance.gameObject);
 
+            if (conn.identity != null)
+            {
+                userManager.SetLocalUser(conn, userInstance.gameObject);
+                
+            }
 
 
             // Pretty sure this will need to be replaced with User instead
@@ -212,7 +227,8 @@ public class NetworkManagerLobby : NetworkManager
     public override void OnClientSceneChanged()
     {
         base.OnClientSceneChanged();
-        OnSceneChange?.Invoke("Scene_Map_01");
+        //OnSceneChange?.Invoke("Scene_Map_01");
+        userManager.OnSceneChanged("Scene_Map_01");
         
     }
 
