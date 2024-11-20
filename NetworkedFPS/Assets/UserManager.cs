@@ -21,6 +21,7 @@ public class UserManager : NetworkBehaviour
     [TargetRpc]
     public void SetLocalUser(NetworkConnectionToClient conn, GameObject user)
     {
+        if (!isClient) return;
         localUser = user.GetComponent<User>();
     }
 

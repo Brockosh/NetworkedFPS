@@ -24,7 +24,7 @@ public class User : NetworkBehaviour
 
 
     [SerializeField]
-    private GameObject FirstPersonPlayerPrefab;
+    public GameObject FirstPersonPlayerPrefab;
 
     private NetworkManagerLobby room;
 
@@ -44,23 +44,18 @@ public class User : NetworkBehaviour
     }
 
 
-    [Command(requiresAuthority = false)]
     public void UpdateControlledObject(string newSceneName)
     {
         if (newSceneName.StartsWith("Scene_Map"))
         {
-            Instantiate(FirstPersonPlayerPrefab);
-            NetworkServer.Spawn(FirstPersonPlayerPrefab, connectionToServer);
+            CmdSpawn();
         }
     }
 
-
-
-
-
-
-
-
-
-
+    [Command]
+    public void CmdSpawn()
+    {
+        GameObject firstPersonPlayer = Instantiate(FirstPersonPlayerPrefab);
+        NetworkServer.Spawn(firstPersonPlayer, gameObject);
+    }
 }

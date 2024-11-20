@@ -12,8 +12,6 @@ public class NetworkManagerLobby : NetworkManager
     [Scene][SerializeField] private string menuScene = string.Empty;
 
 
-    // Each client and the server has its own roomPlayerPrefab, this will automatically become active when the start host
-    // is called
     [Header("Room")]
     [SerializeField] private NetworkRoomPlayerLobby roomPlayerPrefab = null;
 
@@ -32,7 +30,6 @@ public class NetworkManagerLobby : NetworkManager
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
     public static event Action<NetworkConnection> OnServerReadied;
-    public static event Action<string> OnSceneChange;
     public static event Action OnUserManagerReady;
 
     public List<User> Users { get; } = new List<User>();
@@ -47,7 +44,6 @@ public class NetworkManagerLobby : NetworkManager
         spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
         UserManager userManagerRef = Instantiate(userManager);
         NetworkServer.Spawn(userManagerRef.gameObject);
-        userManager = userManagerRef;
     }
 
     public override void OnStartClient()
@@ -56,7 +52,6 @@ public class NetworkManagerLobby : NetworkManager
 
         foreach (var prefab in spawnablePrefabs)
         {
-            // I think allows us to set from the editor what prefabs the client will be able to spawn
             NetworkClient.RegisterPrefab(prefab);
         }
     }
@@ -147,6 +142,7 @@ public class NetworkManagerLobby : NetworkManager
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
+
         // Makes sure the client is in the right scene
         if (SceneManager.GetActiveScene().name == "menuScene")
         {
@@ -160,7 +156,7 @@ public class NetworkManagerLobby : NetworkManager
 
             if (conn.identity != null)
             {
-                userManager.SetLocalUser(conn, userInstance.gameObject);
+                FindObjectOfType<UserManager>().SetLocalUser(conn, userInstance.gameObject);
                 
             }
 
@@ -219,17 +215,14 @@ public class NetworkManagerLobby : NetworkManager
     {
         if (sceneName.StartsWith("Scene_Map"))
         {
-           // GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);
-            //NetworkServer.Spawn(playerSpawnSystemInstance);
+
         }
     }
 
     public override void OnClientSceneChanged()
     {
         base.OnClientSceneChanged();
-        //OnSceneChange?.Invoke("Scene_Map_01");
-        userManager.OnSceneChanged("Scene_Map_01");
-        
+        FindObjectOfType<UserManager>().OnSceneChanged("Scene_Map_01");    
     }
 
     public override void OnServerReady(NetworkConnectionToClient conn)
