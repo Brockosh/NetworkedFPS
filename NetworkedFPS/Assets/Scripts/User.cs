@@ -49,6 +49,8 @@ public class User : NetworkBehaviour
         if (newSceneName.StartsWith("Scene_Map"))
         {
             CmdSpawn();
+            NetworkRoomPlayerLobby room = GetComponentInChildren<NetworkRoomPlayerLobby>();
+            Destroy(room);
         }
     }
 

@@ -24,13 +24,7 @@ public class Player : NetworkBehaviour
         playerName = "Test";
         Camera camera = GetComponent<Camera>();
 
-
-        //This is always false
-        if (isLocalPlayer)
-        {
-            camera.GetComponent<MouseLook>().playerBody = transform;
-            camera.GetComponent<MouseLook>().LockCursor();
-        }
+        camera.GetComponent<MouseLook>().LockCursor();
 
         if (NetworkServer.active)
         {
